@@ -1,0 +1,144 @@
+/* Chefs Page Styles - Fully Scoped to prevent leakage */
+
+.chefs-page {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.chefs-page .chefs-banner {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.chefs-page .chefs-banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chefs-page .chefs-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chefs-page .chefs-banner-overlay h1 {
+  color: #fff;
+  font-size: 3rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.chefs-page .chefs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+}
+
+.chefs-page .chefs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.chefs-page .chef-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.chefs-page .chef-card:hover {
+  transform: translateY(-5px);
+}
+
+.chefs-page .chef-image-container {
+  height: 250px;
+  width: 100%;
+  background: #eee;
+}
+
+.chefs-page .chef-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chefs-page .chef-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  color: #999;
+  background-color: #e0e0e0;
+}
+
+.chefs-page .chef-info {
+  padding: 1.5rem;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chefs-page .chef-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.chefs-page .chef-info p {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.chefs-page .chef-link {
+  display: inline-block;
+  background-color: #2E5E4E;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.chefs-page .chef-link:hover {
+  background-color: #1a3c31;
+}
+
+.chefs-page .no-chefs {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  grid-column: 1 / -1;
+  padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .chefs-page .chefs-banner {
+    height: 200px;
+  }
+  
+  .chefs-page .chefs-banner-overlay h1 {
+    font-size: 2rem;
+  }
+}
