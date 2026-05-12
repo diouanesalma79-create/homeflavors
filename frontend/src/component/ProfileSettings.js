@@ -14,6 +14,7 @@ const ProfileSettings = () => {
     phone: '',
     address: '',
     bio: '',
+    nationality: '',
     language: 'en'
   });
   const [avatar, setAvatar] = useState(null);
@@ -34,6 +35,7 @@ const ProfileSettings = () => {
           phone: data.phone || '',
           address: data.address || '',
           bio: data.bio || '',
+          nationality: data.nationality || '',
           language: 'en'
         });
         if (data.profile_picture_url) {
@@ -76,6 +78,7 @@ const ProfileSettings = () => {
       data.append('phone', formData.phone);
       data.append('address', formData.address);
       data.append('bio', formData.bio);
+      data.append('nationality', formData.nationality);
       
       if (avatar) {
         data.append('profile_picture', avatar);
@@ -95,7 +98,8 @@ const ProfileSettings = () => {
         name: updatedUser.name || '',
         phone: updatedUser.phone || '',
         address: updatedUser.address || '',
-        bio: updatedUser.bio || ''
+        bio: updatedUser.bio || '',
+        nationality: updatedUser.nationality || ''
       }));
       if (updatedUser.profile_picture_url) {
         setPreviewUrl(updatedUser.profile_picture_url);
@@ -172,6 +176,16 @@ const ProfileSettings = () => {
             <div className="form-group">
               <label>Email Address (ReadOnly)</label>
               <input type="email" value={formData.email} readOnly disabled />
+            </div>
+
+            <div className="form-group">
+              <label>Nationality</label>
+              <input
+                type="text"
+                value={formData.nationality}
+                onChange={(e) => handleInputChange('nationality', e.target.value)}
+                placeholder="Enter your nationality"
+              />
             </div>
 
             <div className="form-group">

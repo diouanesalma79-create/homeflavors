@@ -87,7 +87,7 @@ const HeaderActions = () => {
   
       {/* Actions */}
       <div className="header-actions">
-        {!isAuthenticated && (
+        {isAuthenticated && (
           <button
             type="button"
             className="header-btn header-btn--chatbox"

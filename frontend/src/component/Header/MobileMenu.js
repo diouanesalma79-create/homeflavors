@@ -91,7 +91,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
         </nav>
 
         <div className="mobile-menu-actions">
-          {!isAuthenticated && (
+          {isAuthenticated && (
             <button
               type="button"
               className="mobile-menu-btn mobile-menu-btn--chatbox"

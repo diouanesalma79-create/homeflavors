@@ -33,6 +33,8 @@ class DashboardController extends Controller
             ->where('is_read', false)
             ->count();
 
+        $totalSaved = $user->savedRecipes()->count();
+
         // fallback rating — no rating column yet, use 4.8 placeholder
         $averageRating = (float) ($user->rating ?? 4.8);
 
@@ -149,6 +151,7 @@ class DashboardController extends Controller
             'totalRecipes'   => $totalRecipes,
             'pendingOrders'  => $pendingOrders,
             'unreadMessages' => $unreadMessages,
+            'totalSaved'     => $totalSaved,
             'averageRating'  => $averageRating,
             'recentRecipes'  => $recentRecipes,
             'recentMessages' => $recentMessages,

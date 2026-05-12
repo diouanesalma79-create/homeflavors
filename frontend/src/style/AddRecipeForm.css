@@ -15,6 +15,83 @@
   overflow: hidden;
 }
 
+/* Modal Overlay */
+.recipe-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+/* Modal Content */
+.recipe-modal-content {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-inner-form {
+  position: relative;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.close-modal-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Form Grid for compact layout */
+.recipe-form .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+.image-upload-wrapper {
+  border: 2px dashed #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  background: #fcfaf7;
+}
+
+.file-name {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #8a5a44;
+}
+
 .form-header {
   background: linear-gradient(135deg, #8a5a44 0%, #c9a167 100%);
   color: white;
@@ -312,6 +389,12 @@
   .remove-btn {
     align-self: flex-end;
     margin-top: 0.5rem;
+  }
+
+  .recipe-form .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
   }
 }
 

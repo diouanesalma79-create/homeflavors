@@ -91,14 +91,6 @@
   flex-grow: 1;
 }
 
-.chef-recipes-page .recipe-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  color: #8d6e63;
-}
 
 .chef-recipes-page .recipe-stats {
   display: flex;

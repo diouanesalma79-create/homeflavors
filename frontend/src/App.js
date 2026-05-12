@@ -28,6 +28,7 @@ import ChefProfile from './component/ChefProfile';
 import MyRecipes from './component/MyRecipes';
 import ChefOrders from './component/ChefOrders';
 import ChefSettings from './component/ChefSettings';
+import ChefSavedRecipes from './component/ChefSavedRecipes';
 import './App.css';
 
 function App() {
@@ -136,6 +137,16 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['chef', 'cook']}>
                 <ChefOrders />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Chef Saved Recipes Route */}
+          <Route 
+            path="/chef/saved-recipes" 
+            element={
+              <ProtectedRoute allowedRoles={['chef', 'cook']}>
+                <ChefSavedRecipes />
               </ProtectedRoute>
             } 
           />

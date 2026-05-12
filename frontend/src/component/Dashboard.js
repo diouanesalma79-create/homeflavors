@@ -9,7 +9,7 @@ import '../style/Dashboard.css';
 import '../style/ChefDashboard.css';
 
 // Import SVG icons
-import { GridIcon, CookingPotIcon, MessageCircleIcon, UserIcon, LogOutIcon } from '../assets/icons/Icons';
+import { GridIcon, CookingPotIcon, MessageCircleIcon, LogOutIcon, BookmarkIcon } from '../assets/icons/Icons';
 
 const getFlagEmoji = (nationality) => {
   const flags = {
@@ -106,6 +106,10 @@ const ChefDashboard = ({ user, onLogout, navigate }) => {
           <CookingPotIcon />
           <span>My Menu</span>
         </Link>
+        <Link to="/chef/saved-recipes" className="sidebar-nav-item">
+          <BookmarkIcon />
+          <span>Saved Recipes</span>
+        </Link>
         <Link to="/chef/orders" className="sidebar-nav-item">
           <span style={{fontSize: '1.2rem', lineHeight: 1}}>📋</span>
           <span>Orders</span>
@@ -161,11 +165,6 @@ const ChefDashboard = ({ user, onLogout, navigate }) => {
             <p className="hero-bio-v4">
               {user.bio || "Sharing my culinary passion through authentic recipes and premium ingredients. Welcome to my professional space."}
             </p>
-            <div className="hero-btns-v4">
-              <button className="btn-v4 btn-v4-primary" onClick={() => navigate('/dashboard/chef/recettes/nouvelle')}>
-                <span>+</span> Add Recipe
-              </button>
-            </div>
           </div>
         </section>
 
@@ -190,6 +189,13 @@ const ChefDashboard = ({ user, onLogout, navigate }) => {
             <div className="stat-info-v4">
               <h4>Messages</h4>
               <span className="val">{stats?.unreadMessages || 0}</span>
+            </div>
+          </div>
+          <div className="stat-card-v4" onClick={() => navigate('/chef/saved-recipes')} style={{cursor: 'pointer'}}>
+            <div className="stat-icon-v4">🔖</div>
+            <div className="stat-info-v4">
+              <h4>Saved</h4>
+              <span className="val">{stats?.totalSaved || 0}</span>
             </div>
           </div>
           <div className="stat-card-v4">

@@ -38,17 +38,17 @@ class UserResource extends JsonResource
      */
     protected function getProfilePhotoUrl(): ?string
     {
-        // 1. If chef_image is set, use it from storage/chefs/
-        if ($this->chef_image) {
-            return asset('storage/chefs/' . $this->chef_image);
-        }
-
-        // 2. Fallback to user-uploaded profile picture
+        // 1. Prioritize user-uploaded profile picture (active choice)
         if ($this->profile_picture) {
             if (filter_var($this->profile_picture, FILTER_VALIDATE_URL)) {
                 return $this->profile_picture;
             }
             return asset('storage/' . $this->profile_picture);
+        }
+
+        // 2. Fallback to system-assigned chef image (celebrity seeding)
+        if ($this->chef_image) {
+            return asset('storage/chefs/' . $this->chef_image);
         }
 
         // 3. Final fallback: default avatar UI handled by frontend

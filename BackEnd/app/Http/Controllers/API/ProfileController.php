@@ -51,9 +51,10 @@ class ProfileController extends Controller
             'address' => 'nullable|string',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'bio' => 'nullable|string|max:1000',
+            'nationality' => 'nullable|string|max:255',
         ]);
 
-        $data = $request->only(['name', 'phone', 'address', 'bio']);
+        $data = $request->only(['name', 'phone', 'address', 'bio', 'nationality']);
 
         if ($request->hasFile('profile_picture')) {
             // Delete old picture if exists
@@ -63,6 +64,7 @@ class ProfileController extends Controller
 
             $path = $request->file('profile_picture')->store('profile_pictures', 'public');
             $data['profile_picture'] = $path;
+            $data['chef_image'] = null; // Clear system default when custom is uploaded
         }
 
         $user->update($data);

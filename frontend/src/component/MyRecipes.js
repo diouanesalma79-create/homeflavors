@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import recipeService from '../services/recipeService';
 import authService from '../services/authService';
 import LoadingSpinner from './common/LoadingSpinner';
+import AddRecipeForm from './AddRecipeForm';
 import '../style/ChefRecipes.css';
 
 const MyRecipes = () => {
@@ -10,32 +11,44 @@ const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchMyRecipes = async () => {
-      try {
-        setLoading(true);
-        const user = await authService.getMe();
-        if (user.role !== 'cook' && user.role !== 'chef') {
-            navigate('/recipes');
-            return;
-        }
-
-        const data = await recipeService.getMyRecipes();
-        setRecipes(data || []);
-      } catch (err) {
-        console.error('Error fetching your recipes:', err);
-        setError('Failed to load your recipes.');
-      } finally {
-        setLoading(false);
+  const fetchMyRecipes = useCallback(async () => {
+    try {
+      setLoading(true);
+      const user = await authService.getMe();
+      if (user.role !== 'cook' && user.role !== 'chef') {
+          navigate('/recipes');
+          return;
       }
-    };
 
-    fetchMyRecipes();
+      const data = await recipeService.getMyRecipes();
+      setRecipes(data || []);
+    } catch (err) {
+      console.error('Error fetching your recipes:', err);
+      setError('Failed to load your recipes.');
+    } finally {
+      setLoading(false);
+    }
   }, [navigate]);
 
+  useEffect(() => {
+    fetchMyRecipes();
+  }, [fetchMyRecipes]);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isModalOpen]);
+
   const handleAddRecipe = () => {
-    navigate('/dashboard/chef/recettes/nouvelle');
+    setIsModalOpen(true);
   };
 
   const handleEditRecipe = (recipeId) => {
@@ -53,17 +66,15 @@ const MyRecipes = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner message="Fetching your portfolio..." />;
+  if (loading && !isModalOpen) return <LoadingSpinner message="Fetching your portfolio..." />;
 
   return (
-    <div className="chef-recipes-container">
+    <div className="chef-recipes-page">
       <div className="recipes-header">
         <h2>My Recipes</h2>
-        {recipes.length > 0 && (
-          <button className="add-recipe-btn" onClick={handleAddRecipe}>
-            + Add Recipe
-          </button>
-        )}
+        <button className="add-recipe-btn" onClick={handleAddRecipe}>
+          + Add Recipe
+        </button>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -83,15 +94,6 @@ const MyRecipes = () => {
               <div className="recipe-info">
                 <h3 className="recipe-title">{recipe.title}</h3>
                 <p className="recipe-description">{recipe.description}</p>
-                <div className="recipe-meta">
-                  <span className="prep-time">⏱️ {recipe.prep_time || recipe.prepTime || 20} mins</span>
-                  <span className="difficulty">🎯 {recipe.difficulty || 'Medium'}</span>
-                  <span className="servings">👥 Serves {recipe.servings || 4}</span>
-                </div>
-                <div className="recipe-stats">
-                  <span className="likes">❤️ {recipe.likes_count || 0}</span>
-                  <span className="views">👁️ {recipe.views_count || 0}</span>
-                </div>
               </div>
               <div className="recipe-actions">
                 <button 
@@ -109,6 +111,17 @@ const MyRecipes = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Add Recipe Modal */}
+      {isModalOpen && (
+        <div className="recipe-modal-overlay">
+          <AddRecipeForm 
+            isModal={true} 
+            onClose={() => setIsModalOpen(false)} 
+            onSuccess={() => fetchMyRecipes()} 
+          />
         </div>
       )}
     </div>
