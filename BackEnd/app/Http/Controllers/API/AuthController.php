@@ -48,7 +48,7 @@ class AuthController extends Controller
                 'email'           => $request->email,
                 'password'        => Hash::make($request->password),
                 'role'            => $request->role,
-                'status'          => 'active',
+                'status'          => $request->role === 'cook' ? 'pending' : 'active',
                 'profile_picture' => $profilePicturePath,
                 'nationality'     => $request->nationality,
                 'bio'             => $request->bio,
@@ -94,6 +94,10 @@ class AuthController extends Controller
         // Verify user exists and password is correct securely
         if (!$user || !Hash::check($request->password, $user->password)) {
             return $this->error('Invalid login details', 401);
+        }
+
+        if ($user->status === 'inactive') {
+            return $this->error('Account is banned', 403);
         }
 
         // Create Sanctum token

@@ -20,7 +20,13 @@ class FavoriteController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $savedRecipes = $user->savedRecipes()->with('user')->paginate(12);
+        $savedRecipes = $user->savedRecipes()
+            ->with('user')
+            ->where('recipes.status', 'approved')
+            ->whereHas('user', function ($q) {
+                $q->where('role', 'cook')->where('status', 'active');
+            })
+            ->paginate(12);
 
         return $this->success(RecipeResource::collection($savedRecipes)->response()->getData(true));
     }
@@ -38,6 +44,11 @@ class FavoriteController extends Controller
             $user->savedRecipes()->detach($recipe->id);
             return $this->success(['saved' => false], 'Recipe removed from favorites');
         } else {
+            $recipe->load('user');
+            if ($recipe->status !== 'approved' || !$recipe->user || $recipe->user->role !== 'cook' || $recipe->user->status !== 'active') {
+                return $this->error('Recipe not found', 404);
+            }
+
             $user->savedRecipes()->attach($recipe->id);
             return $this->success(['saved' => true], 'Recipe added to favorites');
         }

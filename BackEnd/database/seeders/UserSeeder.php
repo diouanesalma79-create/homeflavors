@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin User',
                 'email' => 'admin@homeflavors.com',
-                'password' => 'password',
+                'password' => 'admin123',
                 'role' => 'admin',
                 'status' => 'active',
                 'phone' => '+1 555 100 0001',

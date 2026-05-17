@@ -30,6 +30,10 @@ class ProfileController extends Controller
      */
     public function show(User $user)
     {
+        if ($user->role !== 'cook' || $user->status !== 'active') {
+            return $this->error('Chef not found', 404);
+        }
+
         $user->load(['recipes' => function ($query) {
             $query->where('status', 'approved')->latest();
         }]);

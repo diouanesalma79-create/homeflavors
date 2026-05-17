@@ -1,0 +1,108 @@
+.visitor-orders-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.visitor-orders-header h2 {
+  margin: 0 0 6px;
+}
+
+.visitor-orders-header p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.visitor-orders-empty {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.visitor-orders-cta {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #ff6b35;
+  color: #fff;
+  font-weight: 600;
+}
+
+.visitor-orders-list {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.visitor-order-card {
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.visitor-order-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.visitor-order-id {
+  font-weight: 700;
+}
+
+.visitor-order-status {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.visitor-order-status.pending {
+  background: rgba(255, 193, 7, 0.18);
+}
+
+.visitor-order-status.accepted {
+  background: rgba(33, 150, 243, 0.18);
+}
+
+.visitor-order-status.ready {
+  background: rgba(156, 39, 176, 0.18);
+}
+
+.visitor-order-status.completed {
+  background: rgba(76, 175, 80, 0.18);
+}
+
+.visitor-order-status.cancelled {
+  background: rgba(244, 67, 54, 0.18);
+}
+
+.visitor-order-body {
+  display: grid;
+  gap: 8px;
+}
+
+.visitor-order-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.visitor-order-row .label {
+  opacity: 0.75;
+}
+
+.visitor-order-row .value {
+  font-weight: 600;
+  text-align: right;
+}
+

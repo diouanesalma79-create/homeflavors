@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import profileService from '../services/profileService';
 import LoadingSpinner from './common/LoadingSpinner';
+import ChefOrderModal from './ChefOrderModal';
 import '../style/ChefRecipes.css';
 
 const ChefRecipes = () => {
@@ -9,6 +10,7 @@ const ChefRecipes = () => {
     const [chef, setChef] = useState(null);
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedRecipe, setSelectedRecipe] = useState(null);
 
     useEffect(() => {
         const fetchChefData = async () => {
@@ -73,6 +75,13 @@ const ChefRecipes = () => {
                                             <Link to={`/recipe/${recipe.id}`} className="view-recipe-btn">
                                                 View Recipe
                                             </Link>
+                                            <button
+                                                type="button"
+                                                className="view-recipe-btn"
+                                                onClick={() => setSelectedRecipe(recipe)}
+                                            >
+                                                Order
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -83,6 +92,11 @@ const ChefRecipes = () => {
                     )}
                 </div>
             </section>
+            <ChefOrderModal
+                isOpen={!!selectedRecipe}
+                onClose={() => setSelectedRecipe(null)}
+                dish={selectedRecipe}
+            />
         </div>
     );
 };

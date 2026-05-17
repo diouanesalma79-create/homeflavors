@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Recipe;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\ApiResponse;
 
@@ -156,6 +157,39 @@ class DashboardController extends Controller
             'recentRecipes'  => $recentRecipes,
             'recentMessages' => $recentMessages,
             'recentActivity' => $recentActivity,
+        ]);
+    }
+
+    /**
+     * Return aggregated admin dashboard statistics.
+     */
+    public function adminStats()
+    {
+        return $this->success([
+            'users' => [
+                'total' => User::count(),
+                'active' => User::where('status', 'active')->count(),
+                'pending' => User::where('status', 'pending')->count(),
+            ],
+            'chefs' => [
+                'total' => User::whereIn('role', ['cook', 'chef'])->count(),
+                'active' => User::whereIn('role', ['cook', 'chef'])->where('status', 'active')->count(),
+                'pending' => User::whereIn('role', ['cook', 'chef'])->where('status', 'pending')->count(),
+            ],
+            'orders' => [
+                'total' => Order::count(),
+                'pending' => Order::where('status', 'pending')->count(),
+                'accepted' => Order::where('status', 'accepted')->count(),
+                'preparing' => Order::where('status', 'preparing')->count(),
+                'delivered' => Order::where('status', 'delivered')->count(),
+                'cancelled' => Order::where('status', 'cancelled')->count(),
+            ],
+            'recipes' => [
+                'total' => Recipe::count(),
+                'pending' => Recipe::where('status', 'pending')->count(),
+                'approved' => Recipe::where('status', 'approved')->count(),
+                'rejected' => Recipe::where('status', 'rejected')->count(),
+            ],
         ]);
     }
 }

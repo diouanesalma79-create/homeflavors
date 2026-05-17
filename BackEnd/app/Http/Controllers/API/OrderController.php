@@ -37,6 +37,16 @@ class OrderController extends Controller
     }
 
     /**
+     * List all orders for admin.
+     */
+    public function adminOrders()
+    {
+        $orders = Order::with(['user', 'recipe'])->latest()->paginate(20);
+
+        return $this->success(OrderResource::collection($orders)->response()->getData(true));
+    }
+
+    /**
      * Place a new order.
      */
     public function store(Request $request)
@@ -74,11 +84,53 @@ class OrderController extends Controller
         }
 
         // Validation: Ensure the status is part of the approved flow
-        $request->validate([
-            'status' => 'required|in:pending,accepted,ready,completed,cancelled',
+        $validated = $request->validate([
+            'status' => 'required|in:pending,accepted,preparing,delivered,cancelled',
         ]);
 
-        $order->update(['status' => $request->status]);
+        $allowedTransitions = [
+            'pending' => ['accepted', 'cancelled'],
+            'accepted' => ['preparing', 'cancelled'],
+            'preparing' => ['delivered', 'cancelled'],
+            'delivered' => [],
+            'cancelled' => [],
+        ];
+
+        $status = $validated['status'];
+
+        if (! in_array($status, $allowedTransitions[$order->status] ?? [], true)) {
+            return $this->error('Invalid order status transition', 422);
+        }
+
+        $order->update(['status' => $status]);
+
+        return $this->success(new OrderResource($order->load(['user', 'recipe'])), 'Order status updated');
+    }
+
+    /**
+     * Update order status for admin.
+     */
+    public function adminUpdateStatus(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,accepted,preparing,delivered,cancelled',
+        ]);
+
+        $allowedTransitions = [
+            'pending' => ['accepted', 'cancelled'],
+            'accepted' => ['preparing', 'cancelled'],
+            'preparing' => ['delivered', 'cancelled'],
+            'delivered' => [],
+            'cancelled' => [],
+        ];
+
+        $status = $validated['status'];
+
+        if (! in_array($status, $allowedTransitions[$order->status] ?? [], true)) {
+            return $this->error('Invalid order status transition', 422);
+        }
+
+        $order->update(['status' => $status]);
 
         return $this->success(new OrderResource($order->load(['user', 'recipe'])), 'Order status updated');
     }

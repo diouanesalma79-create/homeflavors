@@ -1,0 +1,276 @@
+/* ---------------- Modal Background ---------------- */
+.order-page {
+  position: fixed; /* popup above everything */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* dim behind */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 9999;
+  overflow: auto;
+  backdrop-filter: blur(2px); /* optional blur */
+}
+
+/* Floating decorative circles in popup */
+.order-page::before,
+.order-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.order-page::before {
+  top: 10%;
+  left: 5%;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, rgba(109, 166, 143, 0.2) 0%, transparent 70%);
+  animation: float 6s ease-in-out infinite;
+}
+
+.order-page::after {
+  bottom: 15%;
+  right: 8%;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(90, 143, 125, 0.3) 0%, transparent 70%);
+  animation: float 7s ease-in-out infinite 1s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* ---------------- Popup Form Container ---------------- */
+.order-form-container {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  background: 
+    linear-gradient(135deg, #ffffff 0%, #f8f6f2 50%, #f0eee8 100%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q 10 15, 20 20 T 40 20' stroke='rgba(138, 90, 68, 0.1)' stroke-width='0.5' stroke-opacity='0.3' fill='none'/%3E%3C/svg%3E");
+  box-shadow: 
+    0 15px 35px rgba(138, 90, 68, 0.15),
+    0 5px 15px rgba(90, 143, 125, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(138, 90, 68, 0.3);
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+  z-index: 1000;
+  animation: popup 0.4s ease-out;
+}
+
+/* Popup animation */
+@keyframes popup {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Inner floating gradient */
+.order-form-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(109, 166, 143, 0.05) 0%, transparent 70%);
+  transform: rotate(30deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.order-form-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------- Titles ---------------- */
+.order-form-container h2 {
+  font-size: 2.25rem;
+  color: #5a3e2b;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-shadow: 1px 1px 2px rgba(138, 90, 68, 0.1);
+}
+
+.order-form-container h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #8a5a44, #5a8f7d, transparent);
+  margin: 0.5rem auto 1.5rem;
+  border-radius: 2px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #7a5230;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* ---------------- Form ---------------- */
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #5a3e2b;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  position: relative;
+  display: inline-block;
+}
+
+.form-group label::before {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, #6da68f, transparent);
+  opacity: 0.6;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.875rem 1.25rem;
+  border: 2px solid #d8c8b8;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(138, 90, 68, 0.1);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #8a5a44;
+  box-shadow: 0 0 0 3px rgba(138, 90, 68, 0.2), inset 0 2px 4px rgba(90, 143, 125, 0.2);
+}
+
+/* Error messages */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* ---------------- Submit Button ---------------- */
+.submit-button {
+  background: linear-gradient(135deg, #8a5a44 0%, #5a8f7d 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 15px rgba(138, 90, 68, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.submit-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.submit-button:hover::before {
+  left: 100%;
+}
+
+.submit-button:hover {
+  background: linear-gradient(135deg, #9c6b55 0%, #6da68f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(138, 90, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* ---------------- Back link ---------------- */
+.back-link {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.back-link p {
+  color: #7a5230;
+  margin: 0;
+}
+
+.back-link a {
+  color: #8a5a44;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- Close Button ---------------- */
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8a5a44;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-popup:hover {
+  color: #5a3e2b;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 768px) {
+  .order-form-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .order-form-container h2 {
+    font-size: 1.75rem;
+  }
+}

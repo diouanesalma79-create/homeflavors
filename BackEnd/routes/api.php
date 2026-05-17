@@ -9,6 +9,7 @@ use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\AdminRecipeController;
+use App\Http\Controllers\API\AdminUserController;
 use App\Http\Controllers\API\AIChatController;
 use App\Http\Controllers\API\DashboardController;
 
@@ -77,8 +78,16 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Admin Routes
     Route::middleware('role:admin')->prefix('admin')->group(function () {
+        Route::get('/stats', [DashboardController::class, 'adminStats']);
         Route::get('/recipes/pending', [AdminRecipeController::class, 'index']);
         Route::patch('/recipes/{recipe}/approve', [AdminRecipeController::class, 'approve']);
         Route::patch('/recipes/{recipe}/reject', [AdminRecipeController::class, 'reject']);
+        Route::get('/chefs/pending', [AdminUserController::class, 'pendingChefs']);
+        Route::patch('/chefs/{user}/approve', [AdminUserController::class, 'approveChef']);
+        Route::patch('/chefs/{user}/reject', [AdminUserController::class, 'rejectChef']);
+        Route::get('/orders', [OrderController::class, 'adminOrders']);
+        Route::patch('/orders/{order}/status', [OrderController::class, 'adminUpdateStatus']);
+        Route::patch('/users/{user}/ban', [AdminUserController::class, 'ban']);
+        Route::patch('/users/{user}/unban', [AdminUserController::class, 'unban']);
     });
 });

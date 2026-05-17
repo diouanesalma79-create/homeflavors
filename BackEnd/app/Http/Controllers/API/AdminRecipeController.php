@@ -15,8 +15,12 @@ class AdminRecipeController extends Controller
     /**
      * Get all pending recipes.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $request->validate([
+            'page' => 'sometimes|integer|min:1',
+        ]);
+
         $recipes = Recipe::with('user')->where('status', 'pending')->latest()->paginate(20);
         return $this->success(RecipeResource::collection($recipes)->response()->getData(true), 'Pending recipes retrieved successfully');
     }
@@ -24,8 +28,12 @@ class AdminRecipeController extends Controller
     /**
      * Approve a recipe.
      */
-    public function approve(Recipe $recipe)
+    public function approve(Request $request, Recipe $recipe)
     {
+        $request->validate([
+            '*' => 'prohibited',
+        ]);
+
         $recipe->update(['status' => 'approved']);
         return $this->success(new RecipeResource($recipe->load('user')), 'Recipe approved successfully');
     }
@@ -33,8 +41,12 @@ class AdminRecipeController extends Controller
     /**
      * Reject a recipe.
      */
-    public function reject(Recipe $recipe)
+    public function reject(Request $request, Recipe $recipe)
     {
+        $request->validate([
+            '*' => 'prohibited',
+        ]);
+
         $recipe->update(['status' => 'rejected']);
         return $this->success(new RecipeResource($recipe->load('user')), 'Recipe rejected successfully');
     }

@@ -19,7 +19,9 @@ class RecipeController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Recipe::with('user')->where('status', 'approved');
+        $query = Recipe::with('user')->where('status', 'approved')->whereHas('user', function ($q) {
+            $q->where('role', 'cook')->where('status', 'active');
+        });
 
         // Filter by Category
         if ($request->has('category') && $request->category !== 'all') {
@@ -111,7 +113,13 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        return $this->success(new RecipeResource($recipe->load('user')));
+        $recipe->load('user');
+
+        if ($recipe->status !== 'approved' || !$recipe->user || $recipe->user->role !== 'cook' || $recipe->user->status !== 'active') {
+            return $this->error('Recipe not found', 404);
+        }
+
+        return $this->success(new RecipeResource($recipe));
     }
 
     /**
@@ -175,6 +183,10 @@ class RecipeController extends Controller
      */
     public function chefRecipes(\App\Models\User $user)
     {
+        if ($user->role !== 'cook' || $user->status !== 'active') {
+            return $this->error('Chef not found', 404);
+        }
+
         $recipes = $user->recipes()->where('status', 'approved')->latest()->paginate(12);
         return $this->success(RecipeResource::collection($recipes)->response()->getData(true), 'Chef recipes retrieved successfully');
     }
