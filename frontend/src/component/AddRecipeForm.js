@@ -4,21 +4,55 @@ import authService from '../services/authService';
 import recipeService from '../services/recipeService';
 import '../style/AddRecipeForm.css';
 
-const AddRecipeForm = ({ isModal, onClose, onSuccess }) => {
+const AddRecipeForm = ({ isModal, onClose, onSuccess, recipeToEdit }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    image: null,
-    ingredients: '',
-    steps: '',
-    prepTime: '',
-    cookTime: '',
-    category: 'Plat',
-    servings: '',
-    visibility: 'Public',
-    price: ''
+  const [formData, setFormData] = useState(() => {
+    if (recipeToEdit) {
+      return {
+        title: recipeToEdit.title || '',
+        image: null,
+        ingredients: Array.isArray(recipeToEdit.ingredients) 
+          ? recipeToEdit.ingredients.join(', ') 
+          : (recipeToEdit.ingredients || ''),
+        steps: recipeToEdit.instructions || recipeToEdit.steps || '',
+        prepTime: recipeToEdit.prep_time || recipeToEdit.prep_time_minutes || '',
+        cookTime: recipeToEdit.cook_time || '',
+        category: recipeToEdit.category || 'Plat',
+        visibility: recipeToEdit.visibility || 'Public',
+        price: recipeToEdit.price || ''
+      };
+    }
+    return {
+      title: '',
+      image: null,
+      ingredients: '',
+      steps: '',
+      prepTime: '',
+      cookTime: '',
+      category: 'Plat',
+      visibility: 'Public',
+      price: ''
+    };
   });
+
+  useEffect(() => {
+    if (recipeToEdit) {
+      setFormData({
+        title: recipeToEdit.title || '',
+        image: null,
+        ingredients: Array.isArray(recipeToEdit.ingredients) 
+          ? recipeToEdit.ingredients.join(', ') 
+          : (recipeToEdit.ingredients || ''),
+        steps: recipeToEdit.instructions || recipeToEdit.steps || '',
+        prepTime: recipeToEdit.prep_time || recipeToEdit.prep_time_minutes || '',
+        cookTime: recipeToEdit.cook_time || '',
+        category: recipeToEdit.category || 'Plat',
+        visibility: recipeToEdit.visibility || 'Public',
+        price: recipeToEdit.price || ''
+      });
+    }
+  }, [recipeToEdit]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -42,7 +76,7 @@ const AddRecipeForm = ({ isModal, onClose, onSuccess }) => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = 'Title is required';
-    if (!formData.image) newErrors.image = 'Image is required';
+    if (!recipeToEdit && !formData.image) newErrors.image = 'Image is required';
     if (!formData.ingredients.trim()) newErrors.ingredients = 'Ingredients are required';
     if (!formData.steps.trim()) newErrors.steps = 'Steps are required';
     if (!formData.prepTime || formData.prepTime <= 0) newErrors.prepTime = 'Invalid prep time';
@@ -76,12 +110,16 @@ const AddRecipeForm = ({ isModal, onClose, onSuccess }) => {
       data.append('category', formData.category);
       data.append('prep_time', formData.prepTime);
       data.append('cook_time', formData.cookTime || 0);
-      data.append('servings', formData.servings || 1);
       if (formData.image) data.append('image', formData.image);
   
-      await recipeService.create(data);
+      if (recipeToEdit) {
+        await recipeService.update(recipeToEdit.id, data);
+        setSuccessMessage('✅ Recipe updated successfully!');
+      } else {
+        await recipeService.create(data);
+        setSuccessMessage('✅ Recipe added successfully!');
+      }
   
-      setSuccessMessage('✅ Recipe added successfully!');
       setTimeout(() => {
         if (isModal) {
             onSuccess && onSuccess();
@@ -112,8 +150,8 @@ const AddRecipeForm = ({ isModal, onClose, onSuccess }) => {
     <div className={isModal ? "recipe-modal-content" : "add-recipe-page"}>
       <div className={isModal ? "modal-inner-form" : "add-recipe-container"}>
         <div className="form-header">
-          <h1>{isModal ? "Create New Recipe" : "Add a New Recipe"}</h1>
-          <p>Fill in the details below to share your creation</p>
+          <h1>{recipeToEdit ? "Edit Recipe" : (isModal ? "Create New Recipe" : "Add a New Recipe")}</h1>
+          <p>{recipeToEdit ? "Modify your recipe details below" : "Fill in the details below to share your creation"}</p>
           {isModal && <button className="close-modal-btn" onClick={onClose}>×</button>}
         </div>
 
@@ -158,28 +196,18 @@ const AddRecipeForm = ({ isModal, onClose, onSuccess }) => {
                     </div>
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label>Prep (min) *</label>
-                        <input
-                            type="number"
-                            value={formData.prepTime}
-                            onChange={(e) => handleInputChange('prepTime', e.target.value)}
-                            className={errors.prepTime ? 'error' : ''}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Servings *</label>
-                        <input
-                            type="number"
-                            value={formData.servings}
-                            onChange={(e) => handleInputChange('servings', e.target.value)}
-                        />
-                    </div>
+                <div className="form-group">
+                    <label>Prep (min) *</label>
+                    <input
+                        type="number"
+                        value={formData.prepTime}
+                        onChange={(e) => handleInputChange('prepTime', e.target.value)}
+                        className={errors.prepTime ? 'error' : ''}
+                    />
                 </div>
 
                 <div className="form-group">
-                    <label>Recipe Image *</label>
+                    <label>Recipe Image {recipeToEdit ? '' : '*'}</label>
                     <div className="image-upload-wrapper">
                         <input type="file" accept="image/*" onChange={handleImageUpload} />
                         {formData.image && <span className="file-name">{formData.image.name}</span>}
@@ -214,7 +242,7 @@ const AddRecipeForm = ({ isModal, onClose, onSuccess }) => {
           <div className="form-actions">
             <button type="button" onClick={handleCancel} className="cancel-btn">Cancel</button>
             <button type="submit" className="submit-btn" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Publish Recipe'}
+              {isSubmitting ? 'Saving...' : (recipeToEdit ? 'Save Changes' : 'Publish Recipe')}
             </button>
           </div>
 

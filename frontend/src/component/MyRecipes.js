@@ -12,6 +12,7 @@ const MyRecipes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingRecipe, setEditingRecipe] = useState(null);
 
   const fetchMyRecipes = useCallback(async () => {
     try {
@@ -37,7 +38,7 @@ const MyRecipes = () => {
   }, [fetchMyRecipes]);
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (isModalOpen || editingRecipe) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -45,14 +46,16 @@ const MyRecipes = () => {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isModalOpen]);
+  }, [isModalOpen, editingRecipe]);
 
   const handleAddRecipe = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditRecipe = (recipeId) => {
-    navigate(`/dashboard/chef/recettes/edit/${recipeId}`);
+
+
+  const handleEditRecipe = (recipe) => {
+    setEditingRecipe(recipe);
   };
 
   const handleDeleteRecipe = async (recipeId) => {
@@ -98,7 +101,7 @@ const MyRecipes = () => {
               <div className="recipe-actions">
                 <button 
                   className="edit-btn" 
-                  onClick={() => handleEditRecipe(recipe.id)}
+                  onClick={() => handleEditRecipe(recipe)}
                 >
                   Edit
                 </button>
@@ -120,6 +123,18 @@ const MyRecipes = () => {
           <AddRecipeForm 
             isModal={true} 
             onClose={() => setIsModalOpen(false)} 
+            onSuccess={() => fetchMyRecipes()} 
+          />
+        </div>
+      )}
+
+      {/* Edit Recipe Modal */}
+      {editingRecipe && (
+        <div className="recipe-modal-overlay">
+          <AddRecipeForm 
+            isModal={true} 
+            recipeToEdit={editingRecipe}
+            onClose={() => setEditingRecipe(null)} 
             onSuccess={() => fetchMyRecipes()} 
           />
         </div>

@@ -86,16 +86,19 @@ class RecipeController extends Controller
             'instructions' => 'required|string',
             'price'        => 'required|numeric|min:0',
             'image'        => 'nullable|image|max:3072',
+            'prep_time'    => 'sometimes|integer|min:0',
         ]);
 
         $recipeData = [
-            'title'        => $request->title,
-            'description'  => $request->description,
-            'ingredients'  => $request->ingredients,
-            'instructions' => $request->instructions,
-            'price'        => $request->price,
-            'category'     => $request->category,
-            'status'       => 'pending',
+            'title'             => $request->title,
+            'description'       => $request->description,
+            'ingredients'       => $request->ingredients,
+            'instructions'      => $request->instructions,
+            'price'             => $request->price,
+            'category'          => $request->category,
+            'status'            => 'pending',
+            'prep_time_minutes' => $request->prep_time ?? 0,
+            'calories'          => 150, // Default calories
         ];
 
         if ($request->hasFile('image')) {
@@ -139,11 +142,16 @@ class RecipeController extends Controller
             'price'        => 'sometimes|numeric|min:0',
             'category'     => 'sometimes|string',
             'image'        => 'nullable|image|max:3072',
+            'prep_time'    => 'sometimes|integer|min:0',
         ]);
 
         $recipeData = $request->only([
             'title', 'description', 'ingredients', 'instructions', 'price', 'category',
         ]);
+
+        if ($request->has('prep_time')) {
+            $recipeData['prep_time_minutes'] = $request->prep_time;
+        }
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('recipes', 'public');

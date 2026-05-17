@@ -28,6 +28,8 @@ class RecipeResource extends JsonResource
             'chefId'      => $this->user_id,
             'chefName'    => $this->user ? $this->user->name : null,
             'ingredients' => $this->ingredients ? explode(',', $this->ingredients) : [],
+            'instructions'=> $this->instructions,
+            'prep_time'   => $this->prep_time_minutes,
             'price'       => (float) $this->price,
             'category'    => $this->category,
             'status'      => $this->status,

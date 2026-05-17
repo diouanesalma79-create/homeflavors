@@ -41,13 +41,20 @@ const MobileMenu = ({ isOpen, onClose }) => {
 
   const handleDashboardClick = () => {
     if (user) {
-      navigate(`/dashboard/${user.role}`);
+      const effectiveRole =
+        user.role === 'cook' ? 'chef' :
+        user.role === 'customer' ? 'visitor' :
+        user.role;
+      navigate(`/dashboard/${effectiveRole}`);
     }
     onClose();
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('auth_token');
     localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('auth_token');
+    sessionStorage.removeItem('currentUser');
     setIsAuthenticated(false);
     setUser(null);
     onClose();
@@ -78,11 +85,6 @@ const MobileMenu = ({ isOpen, onClose }) => {
               </Link>
             </li>
             <li className="mobile-nav-item">
-              <Link to="/chefs" className="mobile-nav-link" onClick={onClose}>
-                Chefs
-              </Link>
-            </li>
-            <li className="mobile-nav-item">
               <Link to="/about" className="mobile-nav-link" onClick={onClose}>
                 About
               </Link>
@@ -92,13 +94,22 @@ const MobileMenu = ({ isOpen, onClose }) => {
 
         <div className="mobile-menu-actions">
           {isAuthenticated && (
-            <button
-              type="button"
-              className="mobile-menu-btn mobile-menu-btn--chatbox"
-              onClick={handleChatboxClick}
-            >
-              ChatboxAI
-            </button>
+            <>
+              <Link
+                to="/chefs"
+                className="mobile-menu-btn mobile-menu-btn--chefs"
+                onClick={onClose}
+              >
+                Chefs
+              </Link>
+              <button
+                type="button"
+                className="mobile-menu-btn mobile-menu-btn--chatbox"
+                onClick={handleChatboxClick}
+              >
+                ChatboxAI
+              </button>
+            </>
           )}
 
           {isAuthenticated ? (

@@ -10,7 +10,15 @@ const orderService = {
         return response.data.data.data;
     },
 
-
+    /**
+     * Place an order for a recipe dish from a chef's profile.
+     * Requires authentication (customer token).
+     * @param {Object} orderData
+     */
+    async placeOrder(orderData) {
+        const response = await api.post('/orders', orderData);
+        return response.data.data;
+    },
 
     async getIncomingOrders() {
         const response = await api.get('/incoming-orders');

@@ -40,9 +40,23 @@ function App() {
           <Route path="/" element={<Accueil />} />
           <Route path="/recipes" element={<RecipeExploration />} />
           <Route path="/recipe/:id" element={<RecipeDetail />} />
-          <Route path="/chefs" element={<Chefs />} />
+          <Route
+            path="/chefs"
+            element={
+              <ProtectedRoute>
+                <Chefs />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/about" element={<About />} />
-          <Route path="/chef/:chefId" element={<ChefRecipes />} />
+          <Route
+            path="/chef/:chefId"
+            element={
+              <ProtectedRoute>
+                <ChefRecipes />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/become-chef" element={<BecomeAChef />} />
           <Route path="/login" element={<UserTypeSelection />} />
           <Route path="/login/visitor_Form" element={<VisitorLoginForm />} />

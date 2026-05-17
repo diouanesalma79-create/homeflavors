@@ -98,8 +98,14 @@ const recipeService = {
      * Update an existing recipe.
      */
     async update(id, recipeData) {
-        const response = await api.put(`/recipes/${id}`, recipeData);
-        return this.mapRecipe(response.data.data);
+        if (recipeData instanceof FormData) {
+            recipeData.append('_method', 'PUT');
+            const response = await api.post(`/recipes/${id}`, recipeData);
+            return this.mapRecipe(response.data.data);
+        } else {
+            const response = await api.put(`/recipes/${id}`, recipeData);
+            return this.mapRecipe(response.data.data);
+        }
     },
 
     /**
